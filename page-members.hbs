@@ -1,0 +1,90 @@
+{{!< default}}
+{{!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template --}}
+
+{{!-- The big featured header, it uses blog cover image as a BG if available --}}
+<header class="site-header outer">
+    <div class="inner">
+        {{> "site-nav"}}
+    </div>
+</header>
+
+{{!-- Everything inside the #post tags pulls data from the post --}}
+{{#post}}
+
+<main id="site-main" class="site-main outer">
+    <div class="inner">
+
+        <div class="post-feed">
+
+            <header class="post-full-header">
+                <h1 class="post-full-title">{{title}}</h1>
+            </header>
+
+            {{#if feature_image}}
+            <figure class="post-full-image" style="background-image: url({{feature_image}})">
+            </figure>
+            {{/if}}
+
+            <section class="post-full-content">
+                <div class="post-content">
+                    {{#get 'users' limit='all' include='count.posts' order='count.posts desc'}}
+                      <div class="post-feed">
+                        {{#foreach users}}
+                          <article class="post-card {{#unless profile_image}} no-image{{/unless}}">
+                            {{#if profile_image}}
+                              <a class="post-card-image-link" href="/author/{{slug}}">
+                                <div class="post-card-image-members" style="background-image: url({{profile_image}})"></div>
+                              </a>
+                            {{/if}}
+                            <div class="post-card-content">
+                              <div class="post-card-content-no-link">
+                                <header class="post-card-header">
+                                  <h2 class="post-card-title">{{name}}</h2>
+                                </header>
+                                <section class="post-card-excerpt">
+                                  {{#if location}}
+                                    <p>{{location}}</p>
+                                  {{/if}}
+                                  {{#if bio}}
+                                    <p>{{bio}}</p>
+                                  {{/if}}
+                                </section>
+                              </div>
+                              <footer class="post-card-meta-members">
+                                {{#if website}}
+                                    <a class="social-link-dark social-link-wb-dark" href="{{website}}" target="_blank" rel="noopener">{{> "icons/website"}}</a>
+                                {{/if}}
+                                {{#if twitter}}
+                                    <a class="social-link-dark social-link-tw" href="{{twitter_url}}" target="_blank" rel="noopener">{{> "icons/twitter"}}</a>
+                                {{/if}}
+                                {{#if facebook}}
+                                    <a class="social-link-dark social-link-fb" href="{{facebook_url}}" target="_blank" rel="noopener">{{> "icons/facebook"}}</a>
+                                {{/if}}
+                                <a class="social-link-dark social-link-rss" href="https://feedly.com/i/subscription/feed/{{url absolute="true"}}rss/" target="_blank" rel="noopener">{{> "icons/rss"}}</a>
+                              </footer>
+                            </div>
+                          </article>
+                        {{/foreach}}
+                      </div>
+                    {{/get}}
+                    {{content}}
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+</main>
+
+{{/post}}
+
+{{!-- The #contentFor helper here will send everything inside it up to the matching #block helper found in default.hbs --}}
+{{#contentFor "scripts"}}
+<script>
+$(function() {
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+});
+</script>
+{{/contentFor}}
